@@ -9,17 +9,17 @@ Capture screenshots using [phantomjs](http://phantomjs.org/).
 Capture a `800x600` screenshot of [ghub.io](http://ghub.io):
 
 ```js
-var screenshot = require('url-to-screenshot');
-var fs = require('fs');
+const Screenshot = require('url-to-screenshot')
+const fs = require('fs')
 
-screenshot('http://ghub.io/')
+new Screenshot('http://ghub.io/')
   .width(800)
   .height(600)
-  .capture(function(err, img) {
-    if (err) throw err;
-    fs.writeFileSync(__dirname + '/example.png', img);
-    console.log('open example.png');
-  });
+  .capture((err, img) => {
+    if (err) throw err
+    fs.writeFileSync(`${__dirname}/example.png`, img)
+    console.log('open example.png')
+  })
 ```
 
 ![ghub.io](https://raw.github.com/juliangruber/url-to-screenshot/master/example.png)
@@ -29,18 +29,18 @@ screenshot('http://ghub.io/')
 Capture a clipped `320x320` screenshot of [ghub.io](http://ghub.io):
 
 ```js
-var screenshot = require('url-to-screenshot');
-var fs = require('fs');
+const Screenshot = require('url-to-screenshot')
+const fs = require('fs')
 
-screenshot('http://ghub.io/')
+new Screenshot('http://ghub.io/')
   .width(320)
   .height(320)
   .clip()
-  .capture(function(err, img) {
-    if (err) throw err;
-    fs.writeFileSync(__dirname + '/example.png', img);
-    console.log('open example.png');
-  });
+  .capture((err, img) => {
+    if (err) throw err
+    fs.writeFileSync(__dirname + '/example.png', img)
+    console.log('open example.png')
+  })
 ```
 
 ![ghub.io](https://raw.github.com/juliangruber/url-to-screenshot/master/example-clipped.png)
@@ -55,9 +55,9 @@ Use `opts` if passing arguments this way is more convenient than using the api,
 e.g.:
 
 ```js
-var s = Screenshot('http://google.com', { width: 800 })
+const s = new Screenshot('http://google.com', { width: 800 })
 // is the same as
-var s = Screenshot('http://google.com').width(800);
+const s = new Screenshot('http://google.com').width(800)
 ```
 
 ### Screenshot#width(width)
@@ -92,7 +92,7 @@ Defaults to `png`.
 
 ### Screenshot#timeout(timeout)
 
-After loading the page, make phantomjs wait for `timeout` milliseconds before 
+After loading the page, make phantomjs wait for `timeout` milliseconds before
 taking the screenshot. Defaults to `0` ms.
 
 ### Screenshot#ignoreSslErrors()
@@ -126,7 +126,7 @@ capturing.
 
 ## Installation
 
-Make sure you have a working installation of 
+Make sure you have a working installation of
 [phantomjs](http://phantomjs.org/) in your `$PATH`.
 
 With [npm](https://npmjs.org) do:
