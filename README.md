@@ -15,8 +15,8 @@ const fs = require('fs')
 new Screenshot('http://ghub.io/')
   .width(800)
   .height(600)
-  .capture((err, img) => {
-    if (err) throw err
+  .capture()
+  .then(img =>
     fs.writeFileSync(`${__dirname}/example.png`, img)
     console.log('open example.png')
   })
@@ -36,8 +36,8 @@ new Screenshot('http://ghub.io/')
   .width(320)
   .height(320)
   .clip()
-  .capture((err, img) => {
-    if (err) throw err
+  .capture()
+  .then(img => {
     fs.writeFileSync(__dirname + '/example.png', img)
     console.log('open example.png')
   })
@@ -114,12 +114,10 @@ Supported protocols:
 * tlsv1
 * any
 
-### Screenshot#capture([fn])
+### promise = Screenshot#capture()
 
-Capture the screenshot and call `fn` with the possible error and a `Buffer`
+Capture the screenshot and return a promise resoving with the `Buffer`
 containing the image.
-
-If no `fn` is provided, a thunk/continuable is returned.
 
 If the page has a transparent background, it will be set to `white` before
 capturing.

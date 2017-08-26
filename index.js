@@ -1,6 +1,7 @@
-const { exec } = require('child_process')
 const { join } = require('path')
 const { Buffer } = require('safe-buffer')
+const { promisify } = require('util')
+const exec = promisify(require('child_process').exec)
 
 module.exports = class Screenshot {
   /**
@@ -142,14 +143,12 @@ module.exports = class Screenshot {
   }
 
   /**
-   * Capture the screenshot and call `fn` with `err` and `img`.
+   * Capture the screenshot.
    *
-   * @param {Function} fn
+   * @return {Buffer}
    */
 
-  capture (fn) {
-    if (!fn) return fn => this.capture(fn)
-
+  async capture () {
     const args = []
 
     if (this._ignoreSslErrors) {
@@ -172,13 +171,9 @@ module.exports = class Screenshot {
       this._clip
     )
 
-    const opts = {
-      maxBuffer: Infinity
-    }
-
-    exec('phantomjs ' + args.join(' '), opts, (err, stdout) => {
-      if (/Unable to load/.test(stdout)) return fn(new Error(stdout))
-      fn(err, stdout && Buffer.from(stdout, 'base64'))
-    })
+    const opts = { maxBuffer: Infinity }
+    const { stdout } = await exec('phantomjs ' + args.join(' '), opts)
+    if (/Unable to load/.test(stdout)) throw new Error(stdout)
+    return Buffer.from(stdout, 'base64')
   }
 }

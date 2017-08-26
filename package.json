@@ -7,7 +7,7 @@
     "url": "git://github.com/juliangruber/url-to-screenshot.git"
   },
   "scripts": {
-    "test": "tape test.js && npm run lint",
+    "test": "tap --reporter=tap test.js && npm run lint",
     "lint": "prettier-standard '**/*.js' && standard"
   },
   "homepage": "https://github.com/juliangruber/url-to-screenshot",
@@ -18,7 +18,7 @@
   "devDependencies": {
     "prettier-standard": "^6.0.0",
     "standard": "^10.0.3",
-    "tape": "^4.6.0"
+    "tap": "^10.7.2"
   },
   "keywords": [
     "phantomjs",

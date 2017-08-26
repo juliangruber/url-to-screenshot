@@ -6,8 +6,8 @@ new Screenshot('http://ghub.io/')
   .width(320)
   .height(320)
   .clip()
-  .capture((err, img) => {
-    if (err) throw err
+  .capture()
+  .then(img => {
     fs.writeFileSync(join(__dirname, '/example-clipped.png'), img)
     console.log('open example-clipped.png')
   })
