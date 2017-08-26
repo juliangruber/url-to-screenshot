@@ -8,13 +8,16 @@
   },
   "scripts": {
     "test": "tape test.js && npm run lint",
-    "lint": "semistandard"
+    "lint": "prettier-standard '**/*.js' && standard"
   },
   "homepage": "https://github.com/juliangruber/url-to-screenshot",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "safe-buffer": "^5.1.1"
+  },
   "devDependencies": {
-    "semistandard": "^9.0.0",
+    "prettier-standard": "^6.0.0",
+    "standard": "^10.0.3",
     "tape": "^4.6.0"
   },
   "keywords": [

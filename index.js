@@ -1,7 +1,8 @@
-var exec = require('child_process').exec;
-var join = require('path').join;
+var exec = require('child_process').exec
+var join = require('path').join
+var Buffer = require('safe-buffer').Buffer
 
-module.exports = Screenshot;
+module.exports = Screenshot
 
 /**
  * Create screenshot object.
@@ -12,21 +13,23 @@ module.exports = Screenshot;
  */
 
 function Screenshot (url, opts) {
-  if (!(this instanceof Screenshot)) return new Screenshot(url, opts);
-  this.url = url;
+  if (!(this instanceof Screenshot)) return new Screenshot(url, opts)
+  this.url = url
 
-  this.width(1024);
-  this.height(768);
-  this.timeout(0);
-  this.format('png');
-  this.ignoreSslErrors(false);
-  this.sslCertificatesPath(null);
-  this.sslProtocol('sslv3');
-  this.clip(false);
+  this.width(1024)
+  this.height(768)
+  this.timeout(0)
+  this.format('png')
+  this.ignoreSslErrors(false)
+  this.sslCertificatesPath(null)
+  this.sslProtocol('sslv3')
+  this.clip(false)
 
-  Object.keys(opts || {}).forEach(function (key) {
-    if (typeof this[key] === 'function') this[key](opts[key]);
-  }.bind(this));
+  Object.keys(opts || {}).forEach(
+    function (key) {
+      if (typeof this[key] === 'function') this[key](opts[key])
+    }.bind(this)
+  )
 }
 
 /**
@@ -37,9 +40,9 @@ function Screenshot (url, opts) {
  */
 
 Screenshot.prototype.width = function (width) {
-  this._width = width;
-  return this;
-};
+  this._width = width
+  return this
+}
 
 /**
  * Set `height`.
@@ -49,9 +52,9 @@ Screenshot.prototype.width = function (width) {
  */
 
 Screenshot.prototype.height = function (height) {
-  this._height = height;
-  return this;
-};
+  this._height = height
+  return this
+}
 
 /**
  * Set `timeout` for PhantomJS.
@@ -62,9 +65,9 @@ Screenshot.prototype.height = function (height) {
  */
 
 Screenshot.prototype.timeout = function (timeout) {
-  this._timeout = timeout;
-  return this;
-};
+  this._timeout = timeout
+  return this
+}
 
 /**
  * Set output image format.
@@ -80,14 +83,14 @@ Screenshot.prototype.timeout = function (timeout) {
  */
 
 Screenshot.prototype.format = function (format) {
-  format = format.toUpperCase();
-  if (format === 'JPEG') format = 'JPG';
+  format = format.toUpperCase()
+  if (format === 'JPEG') format = 'JPG'
   if (['JPG', 'PNG', 'GIF'].indexOf(format) === -1) {
-    throw new TypeError('unknown format');
+    throw new TypeError('unknown format')
   }
-  this._format = format;
-  return this;
-};
+  this._format = format
+  return this
+}
 
 /**
  * Ignore SSL Errors.
@@ -96,9 +99,9 @@ Screenshot.prototype.format = function (format) {
  */
 
 Screenshot.prototype.ignoreSslErrors = function () {
-  this._ignoreSslErrors = true;
-  return this;
-};
+  this._ignoreSslErrors = true
+  return this
+}
 
 /**
  * Set the SSL certificates path for PhantomJS.
@@ -108,9 +111,9 @@ Screenshot.prototype.ignoreSslErrors = function () {
  */
 
 Screenshot.prototype.sslCertificatesPath = function (path) {
-  this._sslCertificatesPath = path;
-  return this;
-};
+  this._sslCertificatesPath = path
+  return this
+}
 
 /**
  * Set the SSL protocol to be used.
@@ -127,9 +130,9 @@ Screenshot.prototype.sslCertificatesPath = function (path) {
  */
 
 Screenshot.prototype.sslProtocol = function (protocol) {
-  this._sslProtocol = protocol;
-  return this;
-};
+  this._sslProtocol = protocol
+  return this
+}
 
 /**
  * Clip the screenshot to `width` by `height`.
@@ -138,10 +141,10 @@ Screenshot.prototype.sslProtocol = function (protocol) {
  */
 
 Screenshot.prototype.clip = function (clip) {
-  if (typeof clip === 'undefined') clip = true;
-  this._clip = clip;
-  return this;
-};
+  if (typeof clip === 'undefined') clip = true
+  this._clip = clip
+  return this
+}
 
 /**
  * Capture the screenshot and call `fn` with `err` and `img`.
@@ -151,33 +154,40 @@ Screenshot.prototype.clip = function (clip) {
 
 Screenshot.prototype.capture = function (fn) {
   if (!fn) {
-    var self = this;
+    var self = this
     return function (fn) {
-      self.capture(fn);
-    };
+      self.capture(fn)
+    }
   }
 
-  var args = [];
+  var args = []
 
   if (this._ignoreSslErrors) {
-    args.push('--ignore-ssl-errors=true');
+    args.push('--ignore-ssl-errors=true')
   }
   if (this._sslCertificatesPath) {
-    args.push('--ssl-certificates-path=' + this._sslCertificatesPath);
+    args.push('--ssl-certificates-path=' + this._sslCertificatesPath)
   }
   if (this._sslProtocol) {
-    args.push('--ssl-protocol=' + this._sslProtocol);
+    args.push('--ssl-protocol=' + this._sslProtocol)
   }
 
-  args.push(join(__dirname, '/script/render.js'), this.url,
-  this._width, this._height, this._timeout, this._format, this._clip);
+  args.push(
+    join(__dirname, '/script/render.js'),
+    this.url,
+    this._width,
+    this._height,
+    this._timeout,
+    this._format,
+    this._clip
+  )
 
   var opts = {
     maxBuffer: Infinity
-  };
+  }
 
   exec('phantomjs ' + args.join(' '), opts, function (err, stdout) {
-    if (/Unable to load/.test(stdout)) return fn(new Error(stdout));
-    fn(err, stdout && new Buffer(stdout, 'base64'));
-  });
-};
+    if (/Unable to load/.test(stdout)) return fn(new Error(stdout))
+    fn(err, stdout && Buffer.from(stdout, 'base64'))
+  })
+}
