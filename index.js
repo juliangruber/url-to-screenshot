@@ -1,7 +1,4 @@
-const { join } = require('path')
-const { Buffer } = require('safe-buffer')
-const { promisify } = require('util')
-const exec = promisify(require('child_process').exec)
+const capture = require('capture-phantomjs')
 
 module.exports = class Screenshot {
   /**
@@ -149,31 +146,16 @@ module.exports = class Screenshot {
    */
 
   async capture () {
-    const args = []
-
-    if (this._ignoreSslErrors) {
-      args.push('--ignore-ssl-errors=true')
-    }
-    if (this._sslCertificatesPath) {
-      args.push(`--ssl-certificates-path=${this._sslCertificatesPath}`)
-    }
-    if (this._sslProtocol) {
-      args.push(`--ssl-protocol=${this._sslProtocol}`)
-    }
-
-    args.push(
-      join(__dirname, '/script/render.js'),
-      this.url,
-      this._width,
-      this._height,
-      this._timeout,
-      this._format,
-      this._clip
-    )
-
-    const opts = { maxBuffer: Infinity }
-    const { stdout } = await exec('phantomjs ' + args.join(' '), opts)
-    if (/Unable to load/.test(stdout)) throw new Error(stdout)
-    return Buffer.from(stdout, 'base64')
+    return capture({
+      url: this.url,
+      width: this._width,
+      height: this._height,
+      wait: this._timeout,
+      format: this._format,
+      clip: this._clip,
+      ignoreSSLErrors: this._ignoreSslErrors,
+      SSLCertificatesPath: this._sslCertificatesPath,
+      SSLProtocol: this._sslProtocol
+    })
   }
 }
