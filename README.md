@@ -124,9 +124,6 @@ capturing.
 
 ## Installation
 
-Make sure you have a working installation of
-[phantomjs](http://phantomjs.org/) in your `$PATH`.
-
 With [npm](https://npmjs.org) do:
 
 ```bash
