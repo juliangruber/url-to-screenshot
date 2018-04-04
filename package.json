@@ -13,7 +13,7 @@
   "homepage": "https://github.com/juliangruber/url-to-screenshot",
   "main": "index.js",
   "dependencies": {
-    "capture-phantomjs": "^1.3.0"
+    "capture-phantomjs": "^1.4.2"
   },
   "devDependencies": {
     "prettier-standard": "^6.0.0",
