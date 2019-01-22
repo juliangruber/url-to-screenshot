@@ -16,7 +16,7 @@ new Screenshot('http://ghub.io/')
   .width(800)
   .height(600)
   .capture()
-  .then(img =>
+  .then(img => {
     fs.writeFileSync(`${__dirname}/example.png`, img)
     console.log('open example.png')
   })
